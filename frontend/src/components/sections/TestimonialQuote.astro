@@ -1,0 +1,21 @@
+---
+import type { Testimonial } from '../../lib/strapi/types';
+
+interface Props {
+  testimonial: Testimonial;
+}
+
+const { testimonial } = Astro.props;
+---
+
+<figure class="border-l-2 border-ink pl-6 sm:pl-8 py-2 my-8 space-y-4">
+  <blockquote class="text-xl sm:text-2xl font-medium tracking-tight text-ink leading-relaxed">
+    &ldquo;{testimonial.quote}&rdquo;
+  </blockquote>
+  <figcaption class="text-xs sm:text-sm text-ink-80 font-mono tracking-wide">
+    <span class="font-semibold text-ink">{testimonial.authorName}</span>
+    {testimonial.role && testimonial.company && (
+      <span> &mdash; {testimonial.role}, {testimonial.company}</span>
+    )}
+  </figcaption>
+</figure>

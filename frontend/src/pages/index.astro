@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import PrimaryButton from '../components/ui/PrimaryButton.astro';
+import ServiceRow from '../components/sections/ServiceRow.astro';
+import CaseStudyTile from '../components/sections/CaseStudyTile.astro';
+import TestimonialQuote from '../components/sections/TestimonialQuote.astro';
+import { contentGateway } from '../lib/content/gateway';
+
+const settings = await contentGateway.getSettings();
+const services = await contentGateway.listServices();
+const caseStudies = await contentGateway.listCaseStudies();
+const testimonials = await contentGateway.listTestimonials();
+
+const featuredServices = services.slice(0, 3);
+const featuredCases = caseStudies.slice(0, 2);
+const primaryTestimonial = testimonials[0];
+---
+
+<BaseLayout seo={settings.defaultSeo} settings={settings}>
+  <!-- Hero Section -->
+  <section class="max-w-container mx-auto px-5 sm:px-6 pt-20 sm:pt-32 pb-16 sm:pb-24 border-b border-ink-14">
+    <div class="max-w-3xl space-y-6">
+      <span class="text-xs font-semibold uppercase tracking-widest text-ink-60 block">
+        INDEPENDENT DIGITAL STUDIO
+      </span>
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-semibold tracking-tight text-ink leading-[1.05]">
+        Digital experiences, built with intent.
+      </h1>
+      <p class="text-lg sm:text-xl text-ink-80 leading-relaxed font-normal max-w-2xl pt-2">
+        Forma Studio designs and engineers search-first web applications, headless editorial systems, and conversion-focused architectures for forward-looking organizations.
+      </p>
+      <div class="pt-6">
+        <PrimaryButton href="/contact">
+          Discuss a project
+        </PrimaryButton>
+      </div>
+    </div>
+  </section>
+
+  <!-- Selected Services Section -->
+  <section class="max-w-container mx-auto px-5 sm:px-6 py-20 sm:py-28 border-b border-ink-14">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+      <SectionHeading
+        kicker="Core Capabilities"
+        title="Disciplined engineering across the full product lifecycle."
+        description="We partner with leadership teams to eliminate publishing bottlenecks, elevate brand presence, and build search-optimized infrastructure."
+        class="mb-0"
+      />
+      <div class="mt-6 md:mt-0">
+        <a href="/services" class="text-sm font-semibold text-ink underline underline-offset-4 decoration-ink-40 hover:decoration-ink">
+          View all services &rarr;
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      {featuredServices.map((service, index) => (
+        <ServiceRow service={service} index={index} />
+      ))}
+    </div>
+  </section>
+
+  <!-- Selected Work Section -->
+  <section class="max-w-container mx-auto px-5 sm:px-6 py-20 sm:py-28 border-b border-ink-14">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+      <SectionHeading
+        kicker="Selected Work"
+        title="Case studies rooted in factual architecture and measured outcomes."
+        description="Review how we solve complex editorial, performance, and lead ingestion challenges."
+        class="mb-0"
+      />
+      <div class="mt-6 md:mt-0">
+        <a href="/case-studies" class="text-sm font-semibold text-ink underline underline-offset-4 decoration-ink-40 hover:decoration-ink">
+          View all work &rarr;
+        </a>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+      {featuredCases.map((caseStudy) => (
+        <CaseStudyTile caseStudy={caseStudy} />
+      ))}
+    </div>
+  </section>
+
+  <!-- Process Section -->
+  <section class="max-w-container mx-auto px-5 sm:px-6 py-20 sm:py-28 border-b border-ink-14">
+    <SectionHeading
+      kicker="Methodology"
+      title="How we work."
+      description="Three structured phases without unnecessary management layers or bloated handoffs."
+    />
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12">
+      <div class="border-t border-ink py-6 space-y-3">
+        <span class="text-xs font-mono text-ink-60 uppercase tracking-widest block">01 / Discover</span>
+        <h3 class="text-xl font-semibold text-ink">Architecture & Scope</h3>
+        <p class="text-sm text-ink-80 leading-relaxed">
+          We inspect business objectives, audience conversion funnels, editorial bottlenecks, and data ownership requirements before writing code.
+        </p>
+      </div>
+
+      <div class="border-t border-ink py-6 space-y-3">
+        <span class="text-xs font-mono text-ink-60 uppercase tracking-widest block">02 / Design</span>
+        <h3 class="text-xl font-semibold text-ink">Editorial & Visual Systems</h3>
+        <p class="text-sm text-ink-80 leading-relaxed">
+          Typographic precision, accessible interaction states, and strict design constraints that convey quiet confidence rather than fleeting trends.
+        </p>
+      </div>
+
+      <div class="border-t border-ink py-6 space-y-3">
+        <span class="text-xs font-mono text-ink-60 uppercase tracking-widest block">03 / Deliver</span>
+        <h3 class="text-xl font-semibold text-ink">Pre-Rendered Production</h3>
+        <p class="text-sm text-ink-80 leading-relaxed">
+          Decoupled CMS models, automated static build gates with verified rollbacks, and hardened intake APIs isolated from public marketing layers.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial Section -->
+  {primaryTestimonial && (
+    <section class="max-w-container mx-auto px-5 sm:px-6 py-20 sm:py-28 border-b border-ink-14">
+      <div class="max-w-3xl">
+        <span class="text-xs font-semibold uppercase tracking-widest text-ink-60 block mb-6">
+          Client Endorsement
+        </span>
+        <TestimonialQuote testimonial={primaryTestimonial} />
+      </div>
+    </section>
+  )}
+
+  <!-- Closing Call to Action Panel -->
+  <section class="max-w-container mx-auto px-5 sm:px-6 py-20 sm:py-28">
+    <div class="bg-ink text-paper p-8 sm:p-16 rounded-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+      <div class="max-w-xl space-y-3">
+        <h2 class="text-2xl sm:text-4xl font-semibold tracking-tight leading-tight">
+          Have a project in mind?
+        </h2>
+        <p class="text-paper-80 text-sm sm:text-base leading-relaxed">
+          Let’s discuss your platform architecture, timelines, and technical requirements. We typically respond within one business day.
+        </p>
+      </div>
+      <a
+        href="/contact"
+        class="inline-flex items-center justify-center px-8 py-3.5 text-sm font-semibold rounded-sm bg-paper text-ink hover:bg-paper-80 border border-paper transition-all focus:outline-none"
+      >
+        Discuss a project
+      </a>
+    </div>
+  </section>
+</BaseLayout>

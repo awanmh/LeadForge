@@ -1,0 +1,19 @@
+{
+  "name": "leadforge-cms",
+  "private": true,
+  "version": "0.1.0",
+  "description": "LeadForge Strapi 5 Headless CMS",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi"
+  },
+  "dependencies": {
+    "@strapi/strapi": "^5.0.0",
+    "@strapi/plugin-users-permissions": "^5.0.0",
+    "pg": "^8.13.1"
+  },
+  "author": "LeadForge",
+  "license": "MIT"
+}

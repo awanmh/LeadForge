@@ -1,0 +1,64 @@
+---
+import type { SiteSettings } from '../../lib/strapi/types';
+
+interface Props {
+  settings: SiteSettings;
+}
+
+const { settings } = Astro.props;
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-ink text-paper mt-auto border-t border-ink-14">
+  <div class="max-w-container mx-auto px-5 sm:px-6 py-16 sm:py-20">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+      <!-- Brand & Mission -->
+      <div class="md:col-span-6 space-y-4">
+        <span class="text-lg font-semibold tracking-tight block">{settings.brandName}</span>
+        <p class="text-paper-80 text-sm max-w-sm leading-relaxed">
+          Independent digital experience consultancy engineering search-optimized architectures and high-conversion platforms.
+        </p>
+        <div class="pt-2">
+          <a
+            href={`mailto:${settings.contactEmail}`}
+            class="text-sm text-paper underline underline-offset-4 decoration-paper-60 hover:decoration-paper transition-colors"
+          >
+            {settings.contactEmail}
+          </a>
+        </div>
+      </div>
+
+      <!-- Navigation & Links -->
+      <div class="md:col-span-3 space-y-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-paper-60 block">Navigation</span>
+        <ul class="space-y-2 text-sm text-paper-80">
+          <li><a href="/" class="hover:text-paper transition-colors">Home</a></li>
+          <li><a href="/services" class="hover:text-paper transition-colors">Services</a></li>
+          <li><a href="/case-studies" class="hover:text-paper transition-colors">Selected Work</a></li>
+          <li><a href="/contact" class="hover:text-paper transition-colors">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Social & Legal -->
+      <div class="md:col-span-3 space-y-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-paper-60 block">Connect & Legal</span>
+        <ul class="space-y-2 text-sm text-paper-80">
+          {settings.socialLinks.map((item) => (
+            <li>
+              <a href={item.url} target="_blank" rel="noopener noreferrer" class="hover:text-paper transition-colors">
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li><a href="/privacy" class="hover:text-paper transition-colors">Privacy Notice</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Copyright & Disclaimer -->
+    <div class="mt-16 pt-8 border-t border-paper-20 flex flex-col sm:flex-row items-center justify-between text-xs text-paper-60 space-y-4 sm:space-y-0">
+      <p>&copy; {currentYear} {settings.brandName}. All rights reserved.</p>
+      <p>LeadForge demo portfolio implementation. Fictional client entities.</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,21 @@
+---
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  class?: string;
+  id?: string;
+}
+
+const { href, type = 'button', class: className = '', id } = Astro.props;
+const baseClasses = `inline-flex items-center justify-center px-6 py-3.5 text-sm font-medium transition-all duration-150 rounded-sm bg-ink text-paper hover:bg-paper hover:text-ink border border-ink focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2 ${className}`;
+---
+
+{href ? (
+  <a href={href} class={baseClasses} id={id}>
+    <slot />
+  </a>
+) : (
+  <button type={type} class={baseClasses} id={id}>
+    <slot />
+  </button>
+)}

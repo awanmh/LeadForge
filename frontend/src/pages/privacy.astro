@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { contentGateway } from '../lib/content/gateway';
+
+const settings = await contentGateway.getSettings();
+
+const seo = {
+  title: `Privacy & Retention Policy | ${settings.brandName}`,
+  description: 'Detailed privacy notice, data ownership boundaries, and inquiry retention policy for Forma Studio.',
+};
+---
+
+<BaseLayout seo={seo} settings={settings}>
+  <div class="max-w-container mx-auto px-5 sm:px-6 py-16 sm:py-24">
+    <!-- Breadcrumb -->
+    <nav class="text-xs font-mono uppercase tracking-widest text-ink-60 mb-8" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-ink">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-ink">Privacy Policy</span>
+    </nav>
+
+    <div class="max-w-reading">
+      <h1 class="text-3xl sm:text-5xl font-semibold tracking-tight text-ink mb-8 leading-tight">
+        Privacy & Data Ownership Policy
+      </h1>
+
+      <div class="space-y-8 text-base text-ink-90 leading-relaxed">
+        <section class="space-y-3">
+          <h2 class="text-xl font-semibold text-ink">1. Information We Collect</h2>
+          <p>
+            When prospective clients submit an inquiry through our contact form, we collect only the provided contact information: name, business email address, optional service interest, and message content. We do not track visitors across third-party websites or deploy tracking beacons.
+          </p>
+        </section>
+
+        <section class="space-y-3">
+          <h2 class="text-xl font-semibold text-ink">2. Technical Isolation & Storage</h2>
+          <p>
+            Inquiries are processed by an isolated API service and persisted in a private PostgreSQL database (<code>leadforge_app</code>). Inbound submissions are logically separated from our public editorial CMS (<code>leadforge_cms</code>). There are no public API endpoints or client-accessible routes that expose captured inquiries.
+          </p>
+        </section>
+
+        <section class="space-y-3">
+          <h2 class="text-xl font-semibold text-ink">3. Data Retention & Deletion</h2>
+          <p>
+            Prospect inquiry records are retained for a maximum duration of 180 days to facilitate project scoping and contractual evaluation. After 180 days, records are scheduled for automated purge or manual review.
+          </p>
+          <p>
+            You may request immediate deletion of your inquiry details at any time by contacting our operators at <a href={`mailto:${settings.contactEmail}`} class="text-ink underline">{settings.contactEmail}</a>.
+          </p>
+        </section>
+
+        <section class="space-y-3">
+          <h2 class="text-xl font-semibold text-ink">4. Third-Party Sharing</h2>
+          <p>
+            We do not sell, rent, monetize, or disclose prospect inquiry records to external brokers, advertising platforms, or marketing networks under any circumstances.
+          </p>
+        </section>
+
+        <div class="pt-8 border-t border-ink-14 text-xs font-mono text-ink-60">
+          Last updated: October 2026. LeadForge architectural privacy baseline.
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

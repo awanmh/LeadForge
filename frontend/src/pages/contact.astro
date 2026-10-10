@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LeadForm from '../components/forms/LeadForm.astro';
+import { contentGateway } from '../lib/content/gateway';
+
+const settings = await contentGateway.getSettings();
+const services = await contentGateway.listServices();
+
+// Support URL query pre-selection (FR-13 / LF-701)
+const selectedService = Astro.url.searchParams.get('service') || '';
+
+const seo = {
+  title: `Contact & Inquiries | ${settings.brandName}`,
+  description: 'Initiate a project inquiry with Forma Studio. Direct communication and private lead intake.',
+};
+---
+
+<BaseLayout seo={seo} settings={settings}>
+  <div class="max-w-container mx-auto px-5 sm:px-6 py-16 sm:py-24">
+    <!-- Breadcrumb -->
+    <nav class="text-xs font-mono uppercase tracking-widest text-ink-60 mb-8" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-ink">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-ink">Contact</span>
+    </nav>
+
+    <!-- Main Content Split -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+      <!-- Left Column: Invitation & Trust -->
+      <div class="lg:col-span-5 space-y-8">
+        <div>
+          <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-ink leading-tight mb-6">
+            Let’s discuss your initiative.
+          </h1>
+          <p class="text-base sm:text-lg text-ink-80 leading-relaxed font-normal">
+            Whether you are planning an editorial platform migration, an overhaul of technical SEO infrastructure, or a new digital product, we’d welcome a discussion.
+          </p>
+        </div>
+
+        <div class="space-y-6 pt-6 border-t border-ink-14">
+          <div>
+            <span class="text-xs font-mono uppercase tracking-widest text-ink-60 block mb-1">Direct Inquiries</span>
+            <a
+              href={`mailto:${settings.contactEmail}`}
+              class="text-base font-medium text-ink underline underline-offset-4 decoration-ink-40 hover:decoration-ink transition-colors"
+            >
+              {settings.contactEmail}
+            </a>
+          </div>
+
+          <div>
+            <span class="text-xs font-mono uppercase tracking-widest text-ink-60 block mb-1">Response Expectations</span>
+            <p class="text-sm text-ink-80 leading-relaxed">
+              Every inquiry is reviewed directly by a technical partner. We typically schedule an initial discovery conversation within 24 to 48 hours.
+            </p>
+          </div>
+
+          <div>
+            <span class="text-xs font-mono uppercase tracking-widest text-ink-60 block mb-1">Privacy Guarantee</span>
+            <p class="text-sm text-ink-80 leading-relaxed">
+              Your contact details are stored in an isolated, private database and never shared, sold, or surfaced publicly.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Lead Capture Form -->
+      <div class="lg:col-span-7">
+        <LeadForm services={services} selectedServiceSlug={selectedService} />
+      </div>
+    </div>
+  </div>
+</BaseLayout>

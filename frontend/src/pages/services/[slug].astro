@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PrimaryButton from '../../components/ui/PrimaryButton.astro';
+import CaseStudyTile from '../../components/sections/CaseStudyTile.astro';
+import { contentGateway } from '../../lib/content/gateway';
+import { renderStrapiBlocks } from '../../lib/content/blocks';
+
+export async function getStaticPaths() {
+  const services = await contentGateway.listServices();
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const settings = await contentGateway.getSettings();
+const allCaseStudies = await contentGateway.listCaseStudies();
+const relatedCaseStudies = allCaseStudies.filter(
+  (cs) => cs.relatedServiceSlug === service.slug
+);
+
+const renderedBody = renderStrapiBlocks(service.body);
+---
+
+<BaseLayout seo={service.seo} settings={settings} type="article">
+  <article class="max-w-container mx-auto px-5 sm:px-6 py-16 sm:py-24">
+    <!-- Breadcrumbs -->
+    <nav class="text-xs font-mono uppercase tracking-widest text-ink-60 mb-8" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-ink">Home</a>
+      <span class="mx-2">/</span>
+      <a href="/services" class="hover:text-ink">Services</a>
+      <span class="mx-2">/</span>
+      <span class="text-ink">{service.title}</span>
+    </nav>
+
+    <!-- Header / Hero -->
+    <div class="max-w-3xl mb-12 sm:mb-16">
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-ink leading-tight mb-6">
+        {service.title}
+      </h1>
+      <p class="text-lg sm:text-xl text-ink-80 leading-relaxed font-normal">
+        {service.summary}
+      </p>
+    </div>
+
+    <!-- Editorial Body & Scope -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 pt-8 border-t border-ink-14">
+      <div class="lg:col-span-8">
+        <div class="prose max-w-none text-ink-90 text-base leading-relaxed" set:html={renderedBody} />
+
+        <!-- Contextual CTA (FR-13 / LF-701) -->
+        <div class="mt-16 pt-10 border-t border-ink-14 bg-ink-4 p-8 rounded-sm space-y-4">
+          <h2 class="text-xl sm:text-2xl font-semibold text-ink">Ready to explore this capability?</h2>
+          <p class="text-sm text-ink-80 leading-relaxed">
+            Inquire directly regarding {service.title.toLowerCase()}. We’ll prepare a focused technical discussion tailored to your timeline.
+          </p>
+          <div class="pt-2">
+            <PrimaryButton href={`/contact?service=${service.slug}`}>
+              Inquire about this service &rarr;
+            </PrimaryButton>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="lg:col-span-4 space-y-8">
+        <div class="border border-ink-14 p-6 rounded-sm bg-paper">
+          <h3 class="text-xs font-mono uppercase tracking-widest text-ink-60 mb-4 block">Delivery Overview</h3>
+          <ul class="space-y-3 text-xs text-ink-80">
+            <li class="flex items-start">
+              <span class="mr-2 text-ink" aria-hidden="true">&bull;</span>
+              <span><strong>Format:</strong> Fixed-scope sprint or embedded architecture</span>
+            </li>
+            <li class="flex items-start">
+              <span class="mr-2 text-ink" aria-hidden="true">&bull;</span>
+              <span><strong>Audience:</strong> Growth & enterprise engineering teams</span>
+            </li>
+            <li class="flex items-start">
+              <span class="mr-2 text-ink" aria-hidden="true">&bull;</span>
+              <span><strong>Delivery:</strong> Pre-rendered static output & CI/CD automation</span>
+            </li>
+          </ul>
+        </div>
+
+        {relatedCaseStudies.length > 0 && (
+          <div class="space-y-4">
+            <h3 class="text-xs font-mono uppercase tracking-widest text-ink-60 block">Related Case Study</h3>
+            {relatedCaseStudies.map((cs) => (
+              <CaseStudyTile caseStudy={cs} />
+            ))}
+          </div>
+        )}
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,26 @@
+---
+interface Props {
+  kicker?: string;
+  title: string;
+  description?: string;
+  class?: string;
+}
+
+const { kicker, title, description, class: className = '' } = Astro.props;
+---
+
+<div class={`mb-12 sm:mb-16 ${className}`}>
+  {kicker && (
+    <span class="text-xs font-semibold uppercase tracking-wider text-ink-60 block mb-3">
+      {kicker}
+    </span>
+  )}
+  <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight text-ink">
+    {title}
+  </h2>
+  {description && (
+    <p class="mt-4 text-base sm:text-lg text-ink-80 max-w-2xl leading-relaxed">
+      {description}
+    </p>
+  )}
+</div>

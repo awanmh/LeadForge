@@ -1,0 +1,60 @@
+{
+  "kind": "collectionType",
+  "collectionName": "services",
+  "info": {
+    "singularName": "service",
+    "pluralName": "services",
+    "displayName": "Service",
+    "description": "Editorial service offerings"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "minLength": 3,
+      "maxLength": 120
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "summary": {
+      "type": "text",
+      "required": true,
+      "maxLength": 300
+    },
+    "body": {
+      "type": "blocks",
+      "required": true
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo",
+      "required": true
+    },
+    "caseStudies": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::case-study.case-study",
+      "mappedBy": "relatedService"
+    },
+    "testimonials": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::testimonial.testimonial",
+      "mappedBy": "relatedService"
+    }
+  }
+}

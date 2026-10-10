@@ -1,0 +1,41 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_settings",
+  "info": {
+    "singularName": "site-setting",
+    "pluralName": "site-settings",
+    "displayName": "Site Setting",
+    "description": "Global website configuration and SEO"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "brandName": {
+      "type": "string",
+      "required": true,
+      "minLength": 2,
+      "maxLength": 100
+    },
+    "contactEmail": {
+      "type": "email",
+      "required": true
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "defaultSeo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo",
+      "required": true
+    },
+    "socialLinks": {
+      "type": "json"
+    }
+  }
+}

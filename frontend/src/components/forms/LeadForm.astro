@@ -1,0 +1,213 @@
+---
+import type { ServicePage } from '../../lib/strapi/types';
+
+interface Props {
+  services?: ServicePage[];
+  selectedServiceSlug?: string;
+}
+
+const { services = [], selectedServiceSlug = '' } = Astro.props;
+---
+
+<div class="border border-ink-14 bg-paper p-6 sm:p-10 rounded-sm">
+  <form id="lead-intake-form" class="space-y-6" novalidate>
+    <!-- Accessible Status Message Announcement Region -->
+    <div
+      id="form-status"
+      role="status"
+      aria-live="polite"
+      class="hidden p-4 text-sm font-medium rounded-sm border"
+    ></div>
+
+    <!-- Name Field -->
+    <div>
+      <label for="lead-name" class="block text-xs font-semibold uppercase tracking-wider text-ink mb-2">
+        Full Name <span class="text-ink-60" aria-hidden="true">*</span>
+      </label>
+      <input
+        type="text"
+        id="lead-name"
+        name="name"
+        required
+        minlength="2"
+        maxlength="120"
+        placeholder="Jane Doe"
+        class="w-full px-4 py-3 bg-paper border border-ink-24 rounded-sm text-sm text-ink placeholder-ink-40 focus:border-ink focus:outline-none transition-colors"
+      />
+      <p id="name-error" class="hidden text-xs text-ink mt-1 font-medium"></p>
+    </div>
+
+    <!-- Email Field -->
+    <div>
+      <label for="lead-email" class="block text-xs font-semibold uppercase tracking-wider text-ink mb-2">
+        Work Email <span class="text-ink-60" aria-hidden="true">*</span>
+      </label>
+      <input
+        type="email"
+        id="lead-email"
+        name="email"
+        required
+        maxlength="254"
+        placeholder="jane@company.com"
+        class="w-full px-4 py-3 bg-paper border border-ink-24 rounded-sm text-sm text-ink placeholder-ink-40 focus:border-ink focus:outline-none transition-colors"
+      />
+      <p id="email-error" class="hidden text-xs text-ink mt-1 font-medium"></p>
+    </div>
+
+    <!-- Service Selection Field -->
+    <div>
+      <label for="lead-service" class="block text-xs font-semibold uppercase tracking-wider text-ink mb-2">
+        Service of Interest <span class="text-ink-40 font-normal lowercase">(optional)</span>
+      </label>
+      <select
+        id="lead-service"
+        name="service_slug"
+        class="w-full px-4 py-3 bg-paper border border-ink-24 rounded-sm text-sm text-ink focus:border-ink focus:outline-none transition-colors"
+      >
+        <option value="">General Consultation / Not Sure</option>
+        {services.map((svc) => (
+          <option value={svc.slug} selected={svc.slug === selectedServiceSlug}>
+            {svc.title}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Message Field -->
+    <div>
+      <label for="lead-message" class="block text-xs font-semibold uppercase tracking-wider text-ink mb-2">
+        Project Details <span class="text-ink-60" aria-hidden="true">*</span>
+      </label>
+      <textarea
+        id="lead-message"
+        name="message"
+        required
+        minlength="10"
+        maxlength="5000"
+        rows="5"
+        placeholder="Tell us about your team, timelines, and primary goals..."
+        class="w-full px-4 py-3 bg-paper border border-ink-24 rounded-sm text-sm text-ink placeholder-ink-40 focus:border-ink focus:outline-none transition-colors leading-relaxed"
+      ></textarea>
+      <p id="message-error" class="hidden text-xs text-ink mt-1 font-medium"></p>
+    </div>
+
+    <!-- Honeypot Field (Visually hidden & screen-reader ignored) -->
+    <div style="display:none !important;" aria-hidden="true">
+      <label for="lead-website">Leave this field blank</label>
+      <input
+        type="text"
+        id="lead-website"
+        name="website"
+        tabindex="-1"
+        autocomplete="off"
+        value=""
+      />
+    </div>
+
+    <!-- Privacy Note -->
+    <p class="text-xs text-ink-60 leading-relaxed">
+      By submitting this form, you acknowledge that your contact details are stored privately for direct communication. Review our <a href="/privacy" class="underline underline-offset-2 hover:text-ink">privacy policy</a>.
+    </p>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      id="submit-btn"
+      class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 text-sm font-semibold transition-all duration-150 rounded-sm bg-ink text-paper hover:bg-paper hover:text-ink border border-ink disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <span id="btn-text">Submit Inquiry</span>
+      <span id="btn-spinner" class="hidden ml-2" aria-hidden="true">&hellip;</span>
+    </button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('lead-intake-form') as HTMLFormElement | null;
+  const statusBox = document.getElementById('form-status') as HTMLDivElement | null;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+  const btnText = document.getElementById('btn-text') as HTMLSpanElement | null;
+  const btnSpinner = document.getElementById('btn-spinner') as HTMLSpanElement | null;
+
+  if (form && statusBox && submitBtn && btnText && btnSpinner) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Clear previous status
+      statusBox.className = 'hidden p-4 text-sm font-medium rounded-sm border';
+      statusBox.innerHTML = '';
+
+      const formData = new FormData(form);
+      const name = (formData.get('name') as string || '').trim();
+      const email = (formData.get('email') as string || '').trim();
+      const serviceSlug = (formData.get('service_slug') as string || '').trim() || null;
+      const message = (formData.get('message') as string || '').trim();
+      const website = (formData.get('website') as string || '').trim();
+
+      // Client-side quick checks
+      if (!name || name.length < 2) {
+        showStatus('Please provide your name (at least 2 characters).', 'error');
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        showStatus('Please provide a valid email address.', 'error');
+        return;
+      }
+      if (!message || message.length < 10) {
+        showStatus('Please include a message with at least 10 characters.', 'error');
+        return;
+      }
+
+      // Enter submitting state
+      submitBtn.disabled = true;
+      btnText.textContent = 'Submitting...';
+      btnSpinner.classList.remove('hidden');
+
+      try {
+        const response = await fetch('/api/v1/leads', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            service_slug: serviceSlug,
+            message,
+            website,
+          }),
+        });
+
+        if (response.status === 201) {
+          form.reset();
+          showStatus('Thank you. Your inquiry has been received. Our team will follow up directly.', 'success');
+        } else if (response.status === 422) {
+          const data = await response.json().catch(() => null);
+          const detail = data?.errors?.map((err: any) => err.message).join(' ') || 'Please verify the submitted fields.';
+          showStatus(`Validation error: ${detail}`, 'error');
+        } else if (response.status === 429) {
+          showStatus('Too many submissions received. Please wait a minute before submitting again.', 'error');
+        } else {
+          showStatus('The inquiry service is temporarily unavailable. Please email us directly.', 'error');
+        }
+      } catch (err) {
+        showStatus('A network error occurred while submitting. Please check your connection and try again.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        btnText.textContent = 'Submit Inquiry';
+        btnSpinner.classList.add('hidden');
+      }
+    });
+
+    function showStatus(msg: string, type: 'success' | 'error') {
+      if (!statusBox) return;
+      statusBox.classList.remove('hidden');
+      if (type === 'success') {
+        statusBox.className = 'p-4 text-sm font-medium rounded-sm border border-ink bg-paper text-ink';
+      } else {
+        statusBox.className = 'p-4 text-sm font-medium rounded-sm border border-ink-40 bg-ink-4 text-ink';
+      }
+      statusBox.textContent = msg;
+    }
+  }
+</script>

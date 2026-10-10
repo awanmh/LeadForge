@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PrimaryButton from '../components/ui/PrimaryButton.astro';
+import { contentGateway } from '../lib/content/gateway';
+
+const settings = await contentGateway.getSettings();
+
+const seo = {
+  title: `Page Not Found (404) | ${settings.brandName}`,
+  description: 'The requested page could not be located. Return to the Forma Studio homepage.',
+};
+---
+
+<BaseLayout seo={seo} settings={settings}>
+  <div class="max-w-container mx-auto px-5 sm:px-6 py-28 sm:py-40 text-center">
+    <div class="max-w-xl mx-auto space-y-6">
+      <span class="text-xs font-mono uppercase tracking-widest text-ink-60 block">404 &mdash; Page Not Found</span>
+      <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-ink">
+        The requested route does not exist.
+      </h1>
+      <p class="text-base sm:text-lg text-ink-80 leading-relaxed font-normal">
+        The page you are looking for may have been unpublished or renamed. You can explore our services or return to the overview.
+      </p>
+      <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <PrimaryButton href="/">
+          Return to homepage
+        </PrimaryButton>
+        <a
+          href="/services"
+          class="text-sm font-semibold text-ink underline underline-offset-4 decoration-ink-40 hover:decoration-ink py-2"
+        >
+          View all services &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

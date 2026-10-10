@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceRow from '../../components/sections/ServiceRow.astro';
+import { contentGateway } from '../../lib/content/gateway';
+
+const settings = await contentGateway.getSettings();
+const services = await contentGateway.listServices();
+
+const seo = {
+  title: `Services | ${settings.brandName}`,
+  description: 'Explore our disciplined digital engineering, headless editorial architectures, and conversion platforms.',
+};
+---
+
+<BaseLayout seo={seo} settings={settings}>
+  <div class="max-w-container mx-auto px-5 sm:px-6 py-16 sm:py-24">
+    <!-- Breadcrumb -->
+    <nav class="text-xs font-mono uppercase tracking-widest text-ink-60 mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-ink">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-ink">Services</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="max-w-3xl mb-16 sm:mb-20">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-ink mb-6">
+        Disciplined capabilities for modern digital teams.
+      </h1>
+      <p class="text-lg text-ink-80 leading-relaxed max-w-2xl">
+        We specialize in decoupled web architecture, crawlable technical SEO foundations, and resilient lead ingestion pipelines. Every engagement is built for speed, autonomy, and security.
+      </p>
+    </div>
+
+    <!-- Service Rows Listing -->
+    <div class="mt-8 border-b border-ink-14">
+      {services.map((service, index) => (
+        <ServiceRow service={service} index={index} />
+      ))}
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="mt-20 sm:mt-28 p-8 sm:p-12 border border-ink-14 rounded-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-semibold text-ink">Need a tailored engagement?</h2>
+        <p class="text-sm text-ink-80 mt-1">We assess platform requirements and craft fixed-scope architecture blueprints.</p>
+      </div>
+      <a
+        href="/contact"
+        class="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold rounded-sm bg-ink text-paper hover:bg-paper hover:text-ink border border-ink transition-colors"
+      >
+        Start a conversation
+      </a>
+    </div>
+  </div>
+</BaseLayout>

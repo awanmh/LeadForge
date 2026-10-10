@@ -1,0 +1,44 @@
+---
+import type { ServicePage } from '../../lib/strapi/types';
+
+interface Props {
+  service: ServicePage;
+  index: number;
+}
+
+const { service, index } = Astro.props;
+const formattedIndex = String(index + 1).padStart(2, '0');
+---
+
+<div class="border-t border-ink-14 py-8 sm:py-12 group transition-colors">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-baseline">
+    <!-- Number Index -->
+    <div class="md:col-span-2 text-xs font-mono text-ink-60 uppercase tracking-widest">
+      {formattedIndex}
+    </div>
+
+    <!-- Title & Summary -->
+    <div class="md:col-span-8 space-y-3">
+      <h3 class="text-xl sm:text-2xl font-semibold tracking-tight text-ink group-hover:opacity-80 transition-opacity">
+        <a href={`/services/${service.slug}`} class="focus:outline-none">
+          {service.title}
+        </a>
+      </h3>
+      <p class="text-sm sm:text-base text-ink-80 max-w-xl leading-relaxed">
+        {service.summary}
+      </p>
+    </div>
+
+    <!-- Directional Arrow Link -->
+    <div class="md:col-span-2 flex justify-start md:justify-end">
+      <a
+        href={`/services/${service.slug}`}
+        class="inline-flex items-center text-sm font-medium text-ink group-hover:translate-x-1 transition-transform"
+        aria-label={`View details for ${service.title}`}
+      >
+        <span>Explore</span>
+        <span class="ml-1.5" aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</div>
