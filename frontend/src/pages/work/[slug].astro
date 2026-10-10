@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { contentGateway } from '../../lib/content/gateway';
+import { renderStrapiBlocks } from '../../lib/content/blocks';
+
+export async function getStaticPaths() {
+  const caseStudies = await contentGateway.listCaseStudies();
+  return caseStudies.map((cs) => ({
+    params: { slug: cs.slug },
+    props: { caseStudy: cs },
+  }));
+}
+
+const { caseStudy } = Astro.props;
+const settings = await contentGateway.getSettings();
+const renderedOutcomes = renderStrapiBlocks(caseStudy.outcomes);
+---
+
+<BaseLayout seo={caseStudy.seo} settings={settings} type="article">
+  <article class="max-w-container mx-auto px-5 sm:px-6 py-16 sm:py-24">
+    <!-- Breadcrumb -->
+    <nav class="text-xs font-mono uppercase tracking-widest text-ink-60 mb-8" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-ink">Home</a>
+      <span class="mx-2">/</span>
+      <a href="/work" class="hover:text-ink">Work</a>
+      <span class="mx-2">/</span>
+      <span class="text-ink">{caseStudy.clientLabel}</span>
+    </nav>
+
+    <!-- Header / Context -->
+    <div class="max-w-4xl mb-16">
+      <span class="text-xs font-mono uppercase tracking-widest text-ink-60 block mb-4">
+        Client & Sector: {caseStudy.clientLabel}
+      </span>
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-ink leading-tight mb-8">
+        {caseStudy.title}
+      </h1>
+    </div>
+
+    <!-- Editorial Narrative Columns -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 pt-10 border-t border-ink-14">
+      <div class="lg:col-span-8 space-y-12">
+        <!-- Challenge -->
+        <section class="space-y-4">
+          <h2 class="text-xs font-mono uppercase tracking-widest text-ink-60 block">01 / The Challenge</h2>
+          <h3 class="text-2xl font-semibold text-ink tracking-tight">Systemic Friction</h3>
+          <p class="text-base sm:text-lg text-ink-80 leading-relaxed font-normal">
+            {caseStudy.challenge}
+          </p>
+        </section>
+
+        <!-- Solution -->
+        <section class="space-y-4 pt-8 border-t border-ink-14">
+          <h2 class="text-xs font-mono uppercase tracking-widest text-ink-60 block">02 / The Solution</h2>
+          <h3 class="text-2xl font-semibold text-ink tracking-tight">Architectural Strategy</h3>
+          <p class="text-base sm:text-lg text-ink-80 leading-relaxed font-normal">
+            {caseStudy.solution}
+          </p>
+        </section>
+
+        <!-- Verified Outcomes -->
+        <section class="space-y-4 pt-8 border-t border-ink-14">
+          <h2 class="text-xs font-mono uppercase tracking-widest text-ink-60 block">03 / Verified Outcomes</h2>
+          <h3 class="text-2xl font-semibold text-ink tracking-tight">Technical & Operational Delivery</h3>
+          <div class="text-base sm:text-lg text-ink-80 leading-relaxed font-normal" set:html={renderedOutcomes} />
+        </section>
+
+        <!-- Closing CTA -->
+        <div class="mt-16 pt-10 border-t border-ink-14 bg-ink text-paper p-8 sm:p-10 rounded-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div class="space-y-2">
+            <h3 class="text-xl font-semibold">Have a similar technical initiative?</h3>
+            <p class="text-sm text-paper-80">We can review your current stack and propose an incremental migration plan.</p>
+          </div>
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold rounded-sm bg-paper text-ink hover:bg-paper-80 border border-paper transition-colors shrink-0"
+          >
+            Start a project
+          </a>
+        </div>
+      </div>
+
+      <!-- Metadata Panel -->
+      <aside class="lg:col-span-4 space-y-6">
+        <div class="border border-ink-14 p-6 rounded-sm bg-paper space-y-4">
+          <h3 class="text-xs font-mono uppercase tracking-widest text-ink-60 block">Project Attributes</h3>
+          <dl class="space-y-3 text-sm">
+            <div>
+              <dt class="text-xs text-ink-60 uppercase font-mono">Entity Type</dt>
+              <dd class="text-ink font-medium mt-0.5">B2B Demonstration Asset</dd>
+            </div>
+            <div>
+              <dt class="text-xs text-ink-60 uppercase font-mono">Platform Stack</dt>
+              <dd class="text-ink font-medium mt-0.5">Astro + Strapi 5 + FastAPI + PostgreSQL</dd>
+            </div>
+            <div>
+              <dt class="text-xs text-ink-60 uppercase font-mono">Deployment Policy</dt>
+              <dd class="text-ink font-medium mt-0.5">Atomic Static Output with Safe Rollback</dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

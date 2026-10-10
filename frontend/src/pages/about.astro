@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PrimaryButton from '../components/ui/PrimaryButton.astro';
+import { contentGateway } from '../lib/content/gateway';
+
+const settings = await contentGateway.getSettings();
+
+const seo = {
+  title: `About Us | ${settings.brandName}`,
+  description: 'Learn about Forma Studio, our engineering philosophy, and our approach to digital experience platforms.',
+};
+---
+
+<BaseLayout seo={seo} settings={settings}>
+  <div class="max-w-container mx-auto px-5 sm:px-6 py-16 sm:py-24">
+    <!-- Breadcrumb -->
+    <nav class="text-xs font-mono uppercase tracking-widest text-ink-60 mb-8" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-ink">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-ink">About</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="max-w-3xl mb-16">
+      <span class="text-xs font-mono uppercase tracking-widest text-ink-60 block mb-3">Quiet Confidence</span>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-ink mb-6">
+        Independent digital engineering studio.
+      </h1>
+      <p class="text-lg sm:text-xl text-ink-80 leading-relaxed font-normal">
+        We exist to give organizations complete autonomy over their web presence: fast pre-rendered static delivery, decoupled editorial workflows, and private data pipelines.
+      </p>
+    </div>
+
+    <!-- Pillars -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-10 border-t border-ink-14">
+      <div class="space-y-3">
+        <h2 class="text-xl font-semibold text-ink">Editorial Freedom</h2>
+        <p class="text-sm text-ink-80 leading-relaxed">
+          Marketing and content teams should never be blocked by deployment pipelines. We model clean, headless CMS schemas that empower editors while protecting codebase integrity.
+        </p>
+      </div>
+
+      <div class="space-y-3">
+        <h2 class="text-xl font-semibold text-ink">Technical SEO</h2>
+        <p class="text-sm text-ink-80 leading-relaxed">
+          Crawlability and sub-second load times are non-negotiable. Every route we build renders 100% crawlable semantic HTML with validated meta tags and automated XML sitemaps.
+        </p>
+      </div>
+
+      <div class="space-y-3">
+        <h2 class="text-xl font-semibold text-ink">Zero PII Leakage</h2>
+        <p class="text-sm text-ink-80 leading-relaxed">
+          Lead capture is treated with enterprise discipline. Inquiry records are isolated in private backend databases, protected by honeypot heuristics and rate limiting.
+        </p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-20 p-8 sm:p-12 bg-ink text-paper rounded-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div class="space-y-2">
+        <h2 class="text-2xl font-semibold">Want to partner with our team?</h2>
+        <p class="text-sm text-paper-80">We collaborate on fixed-scope initiatives and technical architecture sprints.</p>
+      </div>
+      <PrimaryButton href="/contact" class="bg-paper text-ink hover:bg-paper-80 border-paper">
+        Discuss a project
+      </PrimaryButton>
+    </div>
+  </div>
+</BaseLayout>

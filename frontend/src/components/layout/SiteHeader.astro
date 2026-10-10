@@ -23,10 +23,16 @@ const currentPath = Astro.url.pathname;
         Services
       </a>
       <a
-        href="/case-studies"
-        class={`transition-colors py-1 ${currentPath.startsWith('/case-studies') ? 'text-ink border-b-2 border-ink' : 'text-ink-80 hover:text-ink'}`}
+        href="/work"
+        class={`transition-colors py-1 ${currentPath.startsWith('/work') || currentPath.startsWith('/case-studies') ? 'text-ink border-b-2 border-ink' : 'text-ink-80 hover:text-ink'}`}
       >
         Work
+      </a>
+      <a
+        href="/about"
+        class={`transition-colors py-1 ${currentPath.startsWith('/about') ? 'text-ink border-b-2 border-ink' : 'text-ink-80 hover:text-ink'}`}
+      >
+        About
       </a>
       <a
         href="/contact"
@@ -55,7 +61,8 @@ const currentPath = Astro.url.pathname;
   <!-- Mobile Dropdown Navigation -->
   <div id="mobile-nav" class="hidden md:hidden border-b border-ink-14 bg-paper px-6 py-4 space-y-3">
     <a href="/services" class="block py-2 text-sm font-medium text-ink hover:opacity-70">Services</a>
-    <a href="/case-studies" class="block py-2 text-sm font-medium text-ink hover:opacity-70">Work</a>
+    <a href="/work" class="block py-2 text-sm font-medium text-ink hover:opacity-70">Work</a>
+    <a href="/about" class="block py-2 text-sm font-medium text-ink hover:opacity-70">About</a>
     <a href="/contact" class="block py-2 text-sm font-medium text-ink hover:opacity-70">Contact</a>
   </div>
 </header>

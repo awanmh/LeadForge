@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CaseStudyTile from '../../components/sections/CaseStudyTile.astro';
+import { contentGateway } from '../../lib/content/gateway';
+
+const settings = await contentGateway.getSettings();
+const caseStudies = await contentGateway.listCaseStudies();
+
+const seo = {
+  title: `Selected Work & Case Studies | ${settings.brandName}`,
+  description: 'Factual architecture case studies and verified outcomes engineered by Forma Studio.',
+};
+---
+
+<BaseLayout seo={seo} settings={settings}>
+  <div class="max-w-container mx-auto px-5 sm:px-6 py-16 sm:py-24">
+    <!-- Breadcrumb -->
+    <nav class="text-xs font-mono uppercase tracking-widest text-ink-60 mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-ink">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-ink">Work</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="max-w-3xl mb-16 sm:mb-20">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-ink mb-6">
+        Case studies rooted in architectural rigor.
+      </h1>
+      <p class="text-lg text-ink-80 leading-relaxed max-w-2xl">
+        Every system we build solves tangible organizational bottlenecks: eliminating fragile deployments, securing lead intake pipelines, and maximizing organic discoverability.
+      </p>
+    </div>
+
+    <!-- 2-column Editorial Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {caseStudies.map((caseStudy) => (
+        <CaseStudyTile caseStudy={caseStudy} />
+      ))}
+    </div>
+
+    <!-- Bottom Verification Note -->
+    <div class="mt-20 pt-8 border-t border-ink-14 text-xs font-mono text-ink-60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <span>Fictional client demonstrations created for portfolio and benchmark demonstration.</span>
+      <a href="/contact" class="text-ink underline hover:opacity-80">Discuss your requirements &rarr;</a>
+    </div>
+  </div>
+</BaseLayout>
